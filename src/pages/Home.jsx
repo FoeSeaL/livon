@@ -6,17 +6,20 @@ const Home = () => {
     { 
       name: 'Skincare', 
       description: 'Nourish and protect your skin',
-      image: '/api/placeholder/400/300?text=Skincare'
+      image: '/api/placeholder/400/300?text=Skincare',
+      apiCategory: 'skincare'  // Explicitly set to 'skincare'
     },
     { 
       name: 'Makeup', 
       description: 'Enhance your natural beauty',
-      image: '/api/placeholder/400/300?text=Makeup'
+      image: '/api/placeholder/400/300?text=Makeup',
+      apiCategory: 'womens-dresses'
     },
     { 
       name: 'Haircare', 
       description: 'Healthy, gorgeous hair starts here',
-      image: '/api/placeholder/400/300?text=Haircare'
+      image: '/api/placeholder/400/300?text=Haircare',
+      apiCategory: 'fragrances'
     }
   ];
 
@@ -45,7 +48,7 @@ const Home = () => {
                 <h3 className="text-2xl font-semibold mb-4">{category.name}</h3>
                 <p className="text-gray-600 mb-6">{category.description}</p>
                 <Link 
-                  to={`/products?category=${category.name.toLowerCase()}`}
+                  to={`/products?category=${category.apiCategory}`}
                   className="bg-brand-primary text-white px-6 py-2 rounded-full hover:bg-opacity-90"
                 >
                   Shop {category.name}

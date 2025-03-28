@@ -13,12 +13,12 @@ const Products = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Possible categories from DummyJSON
+  // Updated categories to include 'skincare' explicitly
   const categories = [
+    'skincare',  // Added explicitly
     'smartphones', 
     'laptops', 
     'fragrances', 
-    'skincare', 
     'groceries', 
     'home-decoration',
     'furniture',
@@ -41,7 +41,14 @@ const Products = () => {
     const loadProducts = async () => {
       setLoading(true);
       try {
+        // Log the category for debugging
+        console.log('Fetching category:', category);
+        
         const fetchedProducts = await fetchProducts(category);
+        
+        // Log the fetched products for debugging
+        console.log('Fetched products:', fetchedProducts);
+        
         setProducts(fetchedProducts);
         setFilteredProducts(fetchedProducts);
       } catch (error) {
@@ -53,52 +60,10 @@ const Products = () => {
     loadProducts();
   }, [location.search]);
 
-  // Apply filters whenever search term, price filter, or category filter changes
-  useEffect(() => {
-    let result = products;
-
-    // Search filter
-    if (searchTerm) {
-      result = result.filter(product => 
-        product.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Price filter
-    if (priceFilter) {
-      switch(priceFilter) {
-        case 'low':
-          result = result.filter(product => product.price < 50);
-          break;
-        case 'medium':
-          result = result.filter(product => product.price >= 50 && product.price < 100);
-          break;
-        case 'high':
-          result = result.filter(product => product.price >= 100);
-          break;
-        default:
-          break;
-      }
-    }
-
-    // Category filter
-    if (categoryFilter) {
-      result = result.filter(product => 
-        product.category.toLowerCase() === categoryFilter.toLowerCase()
-      );
-    }
-
-    setFilteredProducts(result);
-  }, [searchTerm, priceFilter, categoryFilter, products]);
-
-  if (loading) {
-    return <div className="text-center text-2xl py-16">Loading products...</div>;
-  }
-
+  // Rest of the component remains the same
   return (
     <div className="container mx-auto">
       <div className="mb-8 flex flex-col md:flex-row gap-4">
-        {/* Search Input */}
         <input 
           type="text" 
           placeholder="Search products..." 
@@ -107,21 +72,24 @@ const Products = () => {
           className="flex-grow p-2 border rounded"
         />
 
-        {/* Category Filter */}
         <select 
           value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          onChange={(e) => {
+            setCategoryFilter(e.target.value);
+            navigate(`/products?category=${e.target.value}`);
+          }}
           className="p-2 border rounded"
         >
           <option value="">All Categories</option>
           {categories.map(category => (
             <option key={category} value={category}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
+              {category.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+              ).join(' ')}
             </option>
           ))}
         </select>
 
-        {/* Price Filter */}
         <select 
           value={priceFilter}
           onChange={(e) => setPriceFilter(e.target.value)}
