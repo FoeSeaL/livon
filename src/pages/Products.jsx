@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCart } from '../contexts/CartContext';
+import ProductCard from '../components/ProductCard';
 import { fetchProducts } from '../utils/api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [priceFilter, setPriceFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
-  const { addToCart } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -142,35 +141,7 @@ const Products = () => {
       ) : (
         <div className="grid md:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
-            <div 
-              key={product.id} 
-              className="bg-white shadow-lg rounded-lg overflow-hidden"
-              onClick={() => navigate(`/products/${product.id}`)}
-            >
-              <img 
-                src={product.thumbnail} 
-                alt={product.title} 
-                className="w-full h-64 object-cover cursor-pointer"
-              />
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
-                <p className="text-gray-600 mb-4">${product.price.toFixed(2)}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">
-                    {product.rating} ★ | {product.stock} in stock
-                  </span>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(product);
-                    }}
-                    className="bg-brand-primary text-white px-4 py-2 rounded-full hover:bg-opacity-90"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
